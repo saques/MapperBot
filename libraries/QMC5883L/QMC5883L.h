@@ -41,17 +41,18 @@
 
 class QMC5883L{
 
-public:
-void setAddress(uint8_t addr);
-void init();
-void setMode(uint16_t mode,uint16_t odr,uint16_t rng,uint16_t osr);
-void softReset();
-void read(uint16_t* x,uint16_t* y,uint16_t* z);
-void read(int* x,int* y,int* z);
+	public:
+		void setAddress(uint8_t addr);
+		void init();
+		void setMode(uint16_t mode,uint16_t odr,uint16_t rng,uint16_t osr);
+		void softReset();
+		void read(uint16_t* x,uint16_t* y,uint16_t* z);
+		void read(int* x,int* y,int* z);
+		float heading(float declination);
 
-private:
-void WriteReg(uint8_t Reg,uint8_t val);
-uint8_t address = QMC5883L_ADDR;
+	private:
+		void WriteReg(uint8_t Reg,uint8_t val);
+		uint8_t address = QMC5883L_ADDR;
 
 };
 
