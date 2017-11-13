@@ -1,28 +1,41 @@
 #include <Wire.h>
 #include <QMC5883L.h>
+#include <HC_SR04.h>
 
-QMC5883L compass;
+#define BUENOS_AIRES_DEC -0.13962634f
+#define Trig 7
+#define Echo 8
+
+
+//QMC5883L compass;
+//HC_SR04 ultrasonic(Trig, Echo);
 
 void setup() {
-  Wire.begin();
+  //Wire.begin();
   Serial.begin(9600);
-  compass.init();
-  //qmc.setMode(Mode_Continuous,ODR_200Hz,RNG_2G,OSR_256);
+  //compass.init();
 }
 
 void loop() {
+  Serial.println(ultrasonic.read());
+  /*
+  Serial.println(toDegrees(heading()));
+  delay(100);
+  */
+}
+
+float heading(){
   int x,y,z;
   compass.read(&x,&y,&z);
 
- // Calculate heading when the magnetometer is level, then correct for signs of axis.
+  // Calculate heading when the magnetometer is level, then correct for signs of axis.
   // Atan2() automatically check the correct formula taking care of the quadrant you are in
   float heading = atan2(y, x);
 
-  float declinationAngle = 0.0404;
-  heading += declinationAngle;
+  heading += BUENOS_AIRES_DEC;
   // Find yours here: http://www.magnetic-declination.com/
 
-   // Correct for when signs are reversed.
+  // Correct for when signs are reversed.
   if(heading < 0)
     heading += 2*PI;
 
@@ -30,21 +43,10 @@ void loop() {
   if(heading > 2*PI)
     heading -= 2*PI;
 
-  // Convert radians to degrees for readability.
-  float headingDegrees = heading * 180/M_PI; 
+  return heading;
+}
 
-
-  Serial.print("x: ");
-  Serial.print(x);
-  Serial.print("    y: ");
-  Serial.print(y);
-  Serial.print("    z: ");
-  Serial.print(z);
-  Serial.print("    heading: ");
-  Serial.print(heading);
-  Serial.print("    Radius: ");
-  Serial.print(headingDegrees);
-  Serial.println();
-  delay(100);
+float toDegrees(float deg){
+  return deg * 180/M_PI;
 }
 
