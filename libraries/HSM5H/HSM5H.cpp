@@ -26,33 +26,32 @@ void initRotaryEncoder(int PinA, int PinB, void_f decrement, void_f increment){
 }
 
 void readPins(){
-  pinAVal = digitalRead(A);
-  pinBVal = digitalRead(B);
+	pinAVal = digitalRead(A);
+	pinBVal = digitalRead(B);
+}
+
+void setExp(int A, int B){
+	expA = A;
+	expB = B;
 }
 
 void pinAInt(){
-  noInterrupts();
-  readPins();
-  if(pinAVal == HIGH && pinBVal == HIGH && expA){
-	inc_f();
-    expA = 0;
-    expB = 0;
-  } else if( pinBVal == LOW && pinAVal == HIGH ) {
-    expB = 1;
-  }
-  interrupts();
+	readPins();
+	if(pinAVal == HIGH && pinBVal == HIGH && expA){
+		inc_f();
+		setExp(0,0);
+	} else if( pinBVal == LOW && pinAVal == HIGH ) {
+		setExp(0,1);
+	}
 }
 
 void pinBInt(){
-  noInterrupts();
-  readPins();
-  if(pinBVal == HIGH && pinAVal == HIGH && expB){
-	dec_f();
-    expA = 0;
-    expB = 0;
-  } else if( pinAVal == LOW && pinBVal == HIGH ) {
-    expA = 1;
-  }
-  interrupts();
+	readPins();
+	if(pinBVal == HIGH && pinAVal == HIGH && expB){
+		dec_f();
+		setExp(0,0);
+	} else if( pinAVal == LOW && pinBVal == HIGH ) {
+		setExp(1,0);
+	}
 }
 

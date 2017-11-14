@@ -1,5 +1,9 @@
 #include <Wire.h>
 
+//Position
+#include <Position.h>
+#define DELTA_CIRCUMFERENCE 2.0f
+
 //Magnetometer
 #include <QMC5883L.h>
 #define BUENOS_AIRES_DEC -0.13962634f
@@ -14,43 +18,42 @@
 #define PinA_ROT_ENC 2
 #define PinB_ROT_ENC 3
 
+
+
+QMC5883L compass;
+Position position;
+//HC_SR04 ultrasonic(Trig, Echo);
+
 /*
  * Functrions for rotary encoder, 
  * to be triggered when interrupt
  * fired.
  */
-int pos = 0;
 void inc(){
-  pos++;
-  Serial.println(pos);
+  position.update(compass.getPreviousReading(), DELTA_CIRCUMFERENCE, 1);
+  printPosition();
 }
 
 void dec(){
-  pos--;
-  Serial.println(pos);
+  position.update(compass.getPreviousReading(), DELTA_CIRCUMFERENCE, -1);
+  printPosition();
 }
 
+void printPosition(){
+  Serial.print(position.getX());
+  Serial.print(";");
+  Serial.println(position.getY());
+}
 
-QMC5883L compass;
-//HC_SR04 ultrasonic(Trig, Echo);
 
 void setup() {
   Wire.begin();
   Serial.begin(9600);
   compass.init();
-  //initRotaryEncoder(PinA_ROT_ENC, PinB_ROT_ENC, inc, dec);
+  initRotaryEncoder(PinA_ROT_ENC, PinB_ROT_ENC, inc, dec);
 }
 
 void loop() {
-  
-  //Serial.println(ultrasonic.read());
-  Serial.println(toDegrees(compass.heading(BUENOS_AIRES_DEC)));
-  delay(100);
-  
-}
-
-
-float toDegrees(float deg){
-  return deg * 180/M_PI;
+  float f = compass.heading(BUENOS_AIRES_DEC);
 }
 

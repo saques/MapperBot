@@ -49,10 +49,11 @@ class QMC5883L{
 		void read(uint16_t* x,uint16_t* y,uint16_t* z);
 		void read(int* x,int* y,int* z);
 		float heading(float declination);
-
+		float getPreviousReading();
 	private:
 		void WriteReg(uint8_t Reg,uint8_t val);
 		uint8_t address = QMC5883L_ADDR;
+		float prev = 0;
 
 };
 

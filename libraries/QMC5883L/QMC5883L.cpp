@@ -56,23 +56,29 @@ void QMC5883L::read(int* x,int* y,int* z){
 }
 
 float QMC5883L::heading(float declination){
-  int x,y,z;
-  read(&x,&y,&z);
+	int x,y,z;
+	read(&x,&y,&z);
 
-  // Calculate heading when the magnetometer is level, then correct for signs of axis.
-  // Atan2() automatically check the correct formula taking care of the quadrant you are in
-  float heading = atan2(y, x);
+	// Calculate heading when the magnetometer is level, then correct for signs of axis.
+	// Atan2() automatically check the correct formula taking care of the quadrant you are in
+	float heading = atan2(y, x);
 
-  heading += declination;
-  // Find yours here: http://www.magnetic-declination.com/
+	heading += declination;
+	// Find yours here: http://www.magnetic-declination.com/
 
-  // Correct for when signs are reversed.
-  if(heading < 0)
-    heading += 2*PI;
+	// Correct for when signs are reversed.
+	if(heading < 0)
+		heading += 2*PI;
 
-  // Check for wrap due to addition of declination.
-  if(heading > 2*PI)
-    heading -= 2*PI;
-    
-  return heading;
+	// Check for wrap due to addition of declination.
+	if(heading > 2*PI)
+		heading -= 2*PI;
+
+	prev = heading;
+
+	return heading;
+}
+
+float QMC5883L::getPreviousReading(){
+	return prev;
 }
