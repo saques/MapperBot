@@ -19,6 +19,12 @@ As it may be expected, the robot will have wheels. As it is also expected, the w
 
 With the magnetometer, we can obtain the current heading of the robot. Therefore, it should be easy to update its current position every time the interrupt of the rotary encoder is fired.
 
+<p align="center">
+  <img src="pictures/nav_example.jpg" alt="navigation example graph"/>
+</p>
+
+In the plot above there is a real example of the system in use.
+
 ## Movement
 
 We will be using a L293D and two DC motors to move the robot. This convenient 2 H bridge gives us the ability to independently control the movement of each motor, both in forward and in reverse.
