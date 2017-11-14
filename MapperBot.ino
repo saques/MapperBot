@@ -18,6 +18,9 @@
 #define PinA_ROT_ENC 2
 #define PinB_ROT_ENC 3
 
+//Motors
+#include <Motor.h>
+
 
 
 QMC5883L compass;
