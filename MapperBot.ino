@@ -18,14 +18,19 @@
 #define PinA_ROT_ENC 2
 #define PinB_ROT_ENC 3
 
+//State
+#include <State.h>
+
 //Motors
 #include <Motor.h>
 
 
 
+
 QMC5883L compass;
 Position position;
-//HC_SR04 ultrasonic(Trig, Echo);
+HC_SR04 ultrasonic(Trig, Echo);
+State& state = Singleton<StraightLine>::getInstance();
 
 /*
  * Functrions for rotary encoder, 
@@ -57,6 +62,8 @@ void setup() {
 }
 
 void loop() {
-  float f = compass.heading(BUENOS_AIRES_DEC);
+  state.updateHeading(compass.heading(BUENOS_AIRES_DEC));
+  state.updateDistance(ultrasonic.read());
+  state = state.act();
 }
 
