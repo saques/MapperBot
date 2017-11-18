@@ -1,5 +1,6 @@
 #ifndef STATE_H
 #define STATE_H
+#define DEFAULT_LIMIT 30
 
 #if ARDUINO >= 100
   #include "Arduino.h"
@@ -8,13 +9,9 @@
 #endif
 
 #include "Motor.h"
-
 #include "HC_SR04.h"
 #include "Singleton.h"
-
-#define DEFAULT_LIMIT 30
-
-
+#include "Position.h"
 
 /*
 ** Interface for declaring States of
@@ -40,10 +37,23 @@ class State {
     void updateHeading(float h){
       heading = h;
     }
+    void updatePosition(Position * p){
+      position = p;
+    }
   protected:
     float distance, heading;
+    Position *position;
 };
 
+class MotorState: public State{
+  public:
+    void setMotors(Motor *m1, Motor *m2){
+      this->m1 = m1;
+      this->m2 = m2;
+    }
+  protected:
+    Motor *m1, *m2;
+};
 
 class StraightLine: public State {
   public:
@@ -53,37 +63,28 @@ class StraightLine: public State {
     int limit = DEFAULT_LIMIT;
 };
 
-template class Singleton<StraightLine>;
-
-class TriggerRotation: public State {
+class TriggerRotation: public MotorState {
   public:
     State& act();
 };
 
-template class Singleton<TriggerRotation>;
-
-class ControlRotation: public State {
+class ControlRotation: public MotorState {
   public:
     State& act();
     float getTarget();
+    void setInitial(float initial);
   private:
-    float target;
+    float target, initial;
 };
 
-template class Singleton<ControlRotation>;
-
-class TriggerRotationToTarget: public State {
+class TriggerRotationToTarget: public MotorState {
   public:
     State& act();
 };
 
-template class Singleton<TriggerRotationToTarget>;
-
-class ControlRotationToTarget: public State {
+class ControlRotationToTarget: public MotorState {
   public:
     State& act();
 };
-
-template class Singleton<ControlRotationToTarget>;
 
 #endif

@@ -23,13 +23,17 @@
 
 //Motors
 #include <Motor.h>
-
-
-
+#define PIN_A_1 0
+#define PIN_B_1 0
+#define PIN_A_2 0
+#define PIN_B_2 0
+#define MOTOR_SPEED 30
 
 QMC5883L compass;
 Position position;
 HC_SR04 ultrasonic(Trig, Echo);
+Motor m1(PIN_A_1, PIN_B_1, MOTOR_SPEED);
+Motor m2(PIN_A_2, PIN_B_2, MOTOR_SPEED);
 State& state = Singleton<StraightLine>::getInstance();
 
 /*
@@ -39,31 +43,29 @@ State& state = Singleton<StraightLine>::getInstance();
  */
 void inc(){
   position.update(compass.getPreviousReading(), DELTA_CIRCUMFERENCE, 1);
-  printPosition();
 }
 
 void dec(){
   position.update(compass.getPreviousReading(), DELTA_CIRCUMFERENCE, -1);
-  printPosition();
 }
-
-void printPosition(){
-  Serial.print(position.getX());
-  Serial.print(";");
-  Serial.println(position.getY());
-}
-
 
 void setup() {
   Wire.begin();
   Serial.begin(9600);
   compass.init();
   initRotaryEncoder(PinA_ROT_ENC, PinB_ROT_ENC, inc, dec);
+
+  Singleton<TriggerRotation>::getInstance().setMotors(&m1,&m2);
+  Singleton<ControlRotation>::getInstance().setMotors(&m1,&m2);
+  Singleton<TriggerRotationToTarget>::getInstance().setMotors(&m1,&m2);
+  Singleton<ControlRotationToTarget>::getInstance().setMotors(&m1,&m2);
+  
 }
 
 void loop() {
   state.updateHeading(compass.heading(BUENOS_AIRES_DEC));
   state.updateDistance(ultrasonic.read());
+  state.updatePosition(&position);
   state = state.act();
 }
 

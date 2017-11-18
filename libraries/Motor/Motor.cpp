@@ -5,22 +5,27 @@ int sign(int x){
   return (x > 0) ? 1 : ((x < 0) ? -1 : 0);
 }
 
-void Motor::Rotate(Motor a, Motor b){
-  a.forward();
-  b.backward();
+void Motor::Rotate(Motor &a, Motor &b, int w){
+  if(w>0){
+    b.forward();
+    a.backward();
+  } else {
+    a.forward();
+    b.backward();
+  }
 }
 
-void Motor::Stop(Motor a, Motor b){
+void Motor::Stop(Motor &a, Motor &b){
   a.stop();
   b.stop();
 }
 
-void Motor::Forward(Motor a, Motor b){
+void Motor::Forward(Motor &a, Motor &b){
   a.forward();
   b.forward();
 }
 
-void Motor::Backward(Motor a, Motor b){
+void Motor::Backward(Motor &a, Motor &b){
   a.backward();
   b.backward();
 }

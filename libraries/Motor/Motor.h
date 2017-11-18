@@ -1,5 +1,5 @@
-#ifndef POSITION_H
-#define POSITION_H
+#ifndef MOTOR_H
+#define MOTOR_H
 
 #if ARDUINO >= 100
   #include "Arduino.h"
@@ -12,13 +12,19 @@ class Motor {
 
 	public:
 
-    static void Rotate(Motor a, Motor b);
+    /*
+    ** Positive w: counterclockwise rotation.
+    ** Negative w: clockwise rotation.
+    ** a is the left Motor
+    ** b is the right motor
+    */
+    static void Rotate(Motor &a, Motor &b, int w);
 
-    static void Stop(Motor a, Motor b);
+    static void Stop(Motor &a, Motor &b);
 
-    static void Forward(Motor a, Motor b);
+    static void Forward(Motor &a, Motor &b);
 
-    static void Backward(Motor a, Motor b);
+    static void Backward(Motor &a, Motor &b);
 
     /*
     ** pinA and pinB are PWM pins.
