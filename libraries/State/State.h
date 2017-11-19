@@ -13,6 +13,8 @@
 #include "Singleton.h"
 #include "Position.h"
 
+enum Quadrant {N_E, N_W, S_E, S_W};
+
 /*
 ** Interface for declaring States of
 ** the MapperBot. This should be done
@@ -73,8 +75,13 @@ class ControlRotation: public MotorState {
     State& act();
     float getTarget();
     void setInitial(float initial);
+    void clearTarget();
+    void shuffleQuadrants();
   private:
-    float target, initial;
+    float target, initial, targetDistance;
+    Quadrant quadrants[4] = {N_E, N_W, S_E, S_W};
+    void verifyTarget();
+    void checkBoundariesAndUpdate(float lower, float upper);
 };
 
 class TriggerRotationToTarget: public MotorState {

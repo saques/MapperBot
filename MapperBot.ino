@@ -1,4 +1,6 @@
 #include <Wire.h>
+#include <time.h>
+#include <stdlib.h>
 
 //Position
 #include <Position.h>
@@ -50,6 +52,7 @@ void dec(){
 }
 
 void setup() {
+  srand(time(NULL));
   Wire.begin();
   Serial.begin(9600);
   compass.init();

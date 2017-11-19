@@ -29,3 +29,9 @@ float Position::getX(){
 float Position::getY(){
 	return y;
 }
+
+void Position::print(){
+	Serial.print(x);
+	Serial.print(";");
+	Serial.println(y);
+}
