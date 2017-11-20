@@ -2,6 +2,13 @@
 #include <time.h>
 #include <stdlib.h>
 
+//wifi
+#include <SoftwareSerial.h>
+#include <SerialESP8266wifi.h>
+#define sw_serial_rx_pin 0 //  Connect this pin to TX on the esp8266
+#define sw_serial_tx_pin 0 //  Connect this pin to RX on the esp8266
+#define esp8266_reset_pin 0 // Connect this pin to CH_PD on the esp8266, not reset. (let reset be unconnected)
+
 //Position
 #include <Position.h>
 #define DELTA_CIRCUMFERENCE 2.0f
