@@ -6,6 +6,8 @@ The objective is to make a robot that can create a map of the *space* it is expl
 
 In a first instance, the plan is to simply log the data (i.e., the coordinates of the objects/walls) to an SD card. Future upgrades might involve more complex operations, such as passing the information to a more powerful platform (for ex., a RaspberryPi) which, based on the information it receives, may issue orders to the robot. A RaspberryPi might identify properties of the *space* (distinguish rooms, tables, et cetera), and use pathfinding techniques to traverse it intelligently.
 
+Other (more inexpensive) possibility is to create a desktop or mobile based app that can receive input from the robot via WI-FI, and even issue commands to the robot (for example, go to the point with coordinates {x,y}). This is the alternative to be implemented in this project.
+
 ## Determining the current position
 
 The idea is to avoid using GPS/GLONASS in this project. Not only those modules are expensive, but are *inaccurate* for our needs. When used together, the accuracy of those systems is of about 2 meters: good enough for cars, but not for rooms.
@@ -35,6 +37,10 @@ The robot will use a ultrasonic sensor to detect obstacles. The idea is that, wh
 
 This idea seems to work on paper, but a few considerations might be needed to be taken into account when choosing the next direction of movement, so as to avoid looping between positions. One possibility is to randomize the *quadrant* (NE, NW, SE, SW) to be used for determining the next direction.
 
+## WiFi
+
+This [library](https://github.com/ekstrand/ESP8266wifi) will be of utmost utility for configuring and using the ESP8266 chip. The idea is to establish a TCP connection with an desktop or mobile based application. This app will receive the coordinates of the obstacles identified by the robot, and may allow the user to issue commands to a robot.
+
 ## Requirements
 
 To sum up, this project will be using the following components:
@@ -46,5 +52,6 @@ To sum up, this project will be using the following components:
 - L293D
 - SD card module
 - HC-SR04 ultrasonic sensor
+- ESP8266 Wifi module
 
 
