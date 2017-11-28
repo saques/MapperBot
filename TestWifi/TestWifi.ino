@@ -29,7 +29,7 @@ void setup() {
   wifi.begin();
 
 
-  wifi.connectToAP("Retutatario", "123Liguai456");
+  wifi.connectToAP("Retutatario", "");
   wifi.connectToServer("192.168.1.101", "2121");
   Serial.println("Connected");
   wifi.send(SERVER, "ESP8266 test app started");
