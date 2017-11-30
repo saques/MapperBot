@@ -54,4 +54,9 @@ To sum up, this project will be using the following components:
 - HC-SR04 ultrasonic sensor
 - ESP8266 Wifi module
 
+## Some issues
+
+- SoftwareSerial will NOT work correctly with a high baud rate (for example, w/the default 115200 of the ESP8266). To change this, I removed the atmega328 from the Uno, connected the ESP8266 and used the AT command "AT+UART_DEF=9600,8,1,0,0".
+- TODO: There seems to be an issue when receiving data from other device. This is critical, as we want to be able to command the robot remotely. Sending works just fine. 
+
 
