@@ -18,19 +18,18 @@ void setup() {
   swSerial.begin(9600);
   Serial.begin(9600);
   
-  while (!Serial)
-    ;
   Serial.println("Starting wifi");
+ 
 
-  wifi.setTransportToUDP();
+  wifi.setTransportToTCP();
 
-  wifi.endSendWithNewline(true); // Will end all transmissions with a newline and carrage return ie println.. default is true
+  wifi.endSendWithNewline(false); // Will end all transmissions with a newline and carrage return ie println.. default is true
 
   wifi.begin();
 
 
   wifi.connectToAP("Retutatario", "");
-  wifi.connectToServer("192.168.1.101", "9999");
+  wifi.connectToServer("192.168.1.110", "9999");
   Serial.println("Connected");
   wifi.send(SERVER, "ESP8266 test app started");
 }
@@ -40,7 +39,8 @@ void loop() {
   if (!wifi.isStarted())
     wifi.begin();
 
-      //Send what you typed in the arduino console to the server
+  
+  //Send what you typed in the arduino console to the server
   static char buf[20];
   if (stringComplete) {
     inputString.toCharArray(buf, sizeof buf);
@@ -48,13 +48,21 @@ void loop() {
     inputString = "";
     stringComplete = false;
   }
+  
 
   /*
   wifi.send(SERVER,"Hola!\r\n");
   delay(1000);
   */
 
+  WifiMessage in = wifi.listenForIncomingMessage(6000);
+  if (in.hasData) {
+    //Echo back;
+    wifi.send(in.channel, in.message);
+  }
+
 }
+
 
 //Listen for serial input from the console
 void serialEvent() {
@@ -66,5 +74,6 @@ void serialEvent() {
     }
   }
 }
+
 
 
