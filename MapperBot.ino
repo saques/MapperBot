@@ -30,6 +30,8 @@
 //State
 #include <State.h>
 
+#include <Environment.h>
+
 //Motors
 #include <Motor.h>
 #define PIN_A_1 0
@@ -65,17 +67,16 @@ void setup() {
   compass.init();
   initRotaryEncoder(PinA_ROT_ENC, PinB_ROT_ENC, inc, dec);
 
-  Singleton<TriggerRotation>::getInstance().setMotors(&m1,&m2);
-  Singleton<ControlRotation>::getInstance().setMotors(&m1,&m2);
-  Singleton<TriggerRotationToTarget>::getInstance().setMotors(&m1,&m2);
-  Singleton<ControlRotationToTarget>::getInstance().setMotors(&m1,&m2);
   
+  Environment::getInstance().setLeftMotor(&m1);
+  Environment::getInstance().setRightMotor(&m2);
+  //Environment::getInstance().setWifi(&wifi);
 }
 
 void loop() {
-  state.updateHeading(compass.heading(BUENOS_AIRES_DEC));
-  state.updateDistance(ultrasonic.read());
-  state.updatePosition(&position);
+  Environment::getInstance().updateHeading(compass.heading(BUENOS_AIRES_DEC));
+  Environment::getInstance().updateDistance(ultrasonic.read());
+  Environment::getInstance().updatePosition(&position);
   state = state.act();
 }
 

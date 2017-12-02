@@ -12,6 +12,7 @@
 #include "HC_SR04.h"
 #include "Singleton.h"
 #include "Position.h"
+#include "Environment.h"
 
 enum Quadrant {N_E, N_W, S_E, S_W};
 
@@ -33,28 +34,6 @@ enum Quadrant {N_E, N_W, S_E, S_W};
 class State {
   public:
     virtual State& act() = 0;
-    void updateDistance(float d){
-      distance = d;
-    }
-    void updateHeading(float h){
-      heading = h;
-    }
-    void updatePosition(Position * p){
-      position = p;
-    }
-  protected:
-    float distance, heading;
-    Position *position;
-};
-
-class MotorState: public State{
-  public:
-    void setMotors(Motor *m1, Motor *m2){
-      this->m1 = m1;
-      this->m2 = m2;
-    }
-  protected:
-    Motor *m1, *m2;
 };
 
 class StraightLine: public State {
@@ -65,12 +44,12 @@ class StraightLine: public State {
     int limit = DEFAULT_LIMIT;
 };
 
-class TriggerRotation: public MotorState {
+class TriggerRotation: public State {
   public:
     State& act();
 };
 
-class ControlRotation: public MotorState {
+class ControlRotation: public State {
   public:
     State& act();
     float getTarget();
@@ -84,12 +63,12 @@ class ControlRotation: public MotorState {
     void checkBoundariesAndUpdate(float lower, float upper);
 };
 
-class TriggerRotationToTarget: public MotorState {
+class TriggerRotationToTarget: public State {
   public:
     State& act();
 };
 
-class ControlRotationToTarget: public MotorState {
+class ControlRotationToTarget: public State {
   public:
     State& act();
 };

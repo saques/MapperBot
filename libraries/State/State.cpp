@@ -5,7 +5,7 @@
 
 //StraightLine
 State& StraightLine::act(){
-  if(distance>limit)
+  if(Environment::getInstance().distance()>limit)
     return *this;
   return Singleton<TriggerRotation>::getInstance();
 }
@@ -16,9 +16,11 @@ void StraightLine::changeLimit(int newLimit){
 
 //TriggerRotation
 State& TriggerRotation::act(){
-  Motor::Rotate(*m1,*m2, 1);
+  Environment& env = Environment::getInstance();
+
+  Motor::Rotate(*env.LMotor(),*env.RMotor(), 1);
   ControlRotation &cr = Singleton<ControlRotation>::getInstance();
-  cr.setInitial(heading);
+  cr.setInitial(env.heading());
   cr.clearTarget();
   cr.shuffleQuadrants();
   return Singleton<ControlRotation>::getInstance();
@@ -26,11 +28,13 @@ State& TriggerRotation::act(){
 
 //ControlRotation
 State& ControlRotation::act(){
+  Environment& env = Environment::getInstance();
 
-  Position * objectPosition = Position::applyDelta(*position,distance,heading);
-
+  Position * objectPosition = Position::applyDelta(*env.position(),
+                                                    env.distance(),
+                                                    env.heading());
   //Log objectPosition to sd card if necessary
-  if(distance < HC_SR04_MAX_RANGE){
+  if(env.distance() < HC_SR04_MAX_RANGE){
     objectPosition->print();
   }
   delete objectPosition;
@@ -39,7 +43,7 @@ State& ControlRotation::act(){
   verifyTarget();
 
   //Exit if 360 degree sweep has been completed
-  if(!Position::headingInRange(heading,initial,EPSILON))
+  if(!Position::headingInRange(env.heading(),initial,EPSILON))
     return *this;
 
   return Singleton<TriggerRotationToTarget>::getInstance();
@@ -68,8 +72,9 @@ void ControlRotation::shuffleQuadrants(){
 
 
 void ControlRotation::checkBoundariesAndUpdate(float lower, float upper){
-  if(heading>=lower && heading<upper && targetDistance < distance)
-    target = heading;
+  Environment& env = Environment::getInstance();
+  if(env.heading()>=lower && env.heading()<upper && targetDistance < env.distance())
+    target = env.heading();
 }
 
 void ControlRotation::verifyTarget(){
@@ -93,23 +98,25 @@ void ControlRotation::verifyTarget(){
 
 //TriggerRotationToTarget
 State& TriggerRotationToTarget::act(){
+  Environment& env = Environment::getInstance();
   float target = Singleton<ControlRotation>::getInstance().getTarget();
-  float lim = heading > M_PI ? heading - M_PI : heading + M_PI;
+  float lim = env.heading() > M_PI ? env.heading() - M_PI : env.heading() + M_PI;
   /*
   ** Remember: m1(a) is the left motor and m2(b) is the right one
   */
   if(target<lim){
-    Motor::Rotate(*m1,*m2,1);
+    Motor::Rotate(*env.LMotor(),*env.RMotor(),1);
   } else {
-    Motor::Rotate(*m1,*m2,-1);
+    Motor::Rotate(*env.LMotor(),*env.RMotor(),-1);
   }
   return Singleton<ControlRotationToTarget>::getInstance();
 }
 
 //ControlRotationToTarget
 State& ControlRotationToTarget::act(){
+  Environment& env = Environment::getInstance();
   float o = Singleton<ControlRotation>::getInstance().getTarget();
-  if(!Position::headingInRange(heading,o,EPSILON))
+  if(!Position::headingInRange(env.heading(),o,EPSILON))
     return *this;
   return Singleton<StraightLine>::getInstance();
 }
