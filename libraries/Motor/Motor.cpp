@@ -31,6 +31,10 @@ void Motor::Backward(Motor &a, Motor &b){
 }
 
 Motor::Motor(int pinA, int pinB, int speed){
+  pinMode(pinA, OUTPUT);
+  pinMode(pinB, OUTPUT);
+  digitalWrite(pinA, LOW);
+  digitalWrite(pinB, LOW);
   this->pinA = pinA;
   this->pinB = pinB;
   this->speed = (sign(speed)*speed)%PWM_VALUES;
@@ -51,6 +55,7 @@ void Motor::backward(){
 
 void Motor::set(int s){
   int sg = sign(s);
+  Serial.println(sg);
   s = (sg*s)%PWM_VALUES;
   stop();
   if(sg>0){
