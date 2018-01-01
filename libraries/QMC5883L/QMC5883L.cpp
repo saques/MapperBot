@@ -8,7 +8,7 @@
   OSR = 512
   Full Scale Range = 8G(Gauss)
   ODR = 200HZ
- 
+
 */
 
 #include "QMC5883L.h"
@@ -29,7 +29,11 @@ void QMC5883L::WriteReg(byte Reg,byte val){
 void QMC5883L::init(){
   WriteReg(0x0B,0x01);
   //Define Set/Reset period
-  setMode(Mode_Continuous,ODR_200Hz,RNG_8G,OSR_512);
+  //setMode(Mode_Continuous,ODR_200Hz,RNG_8G,OSR_512);
+
+  //messing with this contributes to better performance
+  //interrupt-wise
+  setMode(Mode_Continuous,ODR_100Hz,RNG_8G,OSR_256);
 }
 
 void QMC5883L::setMode(uint16_t mode,uint16_t odr,uint16_t rng,uint16_t osr){

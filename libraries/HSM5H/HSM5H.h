@@ -11,4 +11,8 @@ typedef void(*void_f)(void);
 
 void initRotaryEncoder(int PinA, int PinB, void_f decrement, void_f increment);
 
+void detachHSM5H();
+
+void attachHSM5H();
+
 #endif

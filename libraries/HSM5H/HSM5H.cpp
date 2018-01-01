@@ -14,15 +14,25 @@ int A,B;
 void initRotaryEncoder(int PinA, int PinB, void_f decrement, void_f increment){
   inc_f = increment;
   dec_f = decrement;
-  
+
   A = PinA;
   B = PinB;
   expA = expB = 0;
-  
+
   pinMode(PinA, INPUT_PULLUP);
   pinMode(PinB, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(PinA),pinAInt,RISING);
   attachInterrupt(digitalPinToInterrupt(PinB),pinBInt,RISING);
+}
+
+void detachHSM5H(){
+  detachInterrupt(digitalPinToInterrupt(A));
+  detachInterrupt(digitalPinToInterrupt(B));
+}
+
+void attachHSM5H(){
+  attachInterrupt(digitalPinToInterrupt(A),pinAInt,RISING);
+  attachInterrupt(digitalPinToInterrupt(B),pinBInt,RISING);
 }
 
 void readPins(){
@@ -54,4 +64,3 @@ void pinBInt(){
 		setExp(1,0);
 	}
 }
-
