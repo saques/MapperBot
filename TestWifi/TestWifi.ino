@@ -1,29 +1,41 @@
 #include <SoftwareSerial.h>
 #include <SerialESP8266wifi.h>
+#include <HSM5H.h>
 
 #define sw_serial_rx_pin 12 //  Connect this pin to TX on the esp8266
 #define sw_serial_tx_pin 13 //  Connect this pin to RX on the esp8266
 #define esp8266_reset_pin 8 // Connect this pin to CH_PD on the esp8266, not reset. (let reset be unconnected)
+#define PinA_ROT_ENC 2
+#define PinB_ROT_ENC 3
 
-SoftwareSerial swSerial(sw_serial_rx_pin, sw_serial_tx_pin);
+void inc(){
+  Serial.println("inc");
+}
 
-// the last parameter sets the local echo option for the ESP8266 module..
-SerialESP8266wifi wifi(swSerial, swSerial, esp8266_reset_pin);//adding Serial enabled local echo and wifi debug
+void dec(){
+  Serial.println("dec");
+}
 
 String inputString;
 boolean stringComplete = false;
+SoftwareSerial swSerial(sw_serial_rx_pin, sw_serial_tx_pin);
+SerialESP8266wifi wifi(swSerial, swSerial, esp8266_reset_pin);
+char buf[20];
+int counter=0;
 
 void setup() {
   inputString.reserve(20);
   swSerial.begin(9600);
   Serial.begin(9600);
+
+  initRotaryEncoder(PinA_ROT_ENC, PinB_ROT_ENC, inc, dec);
   
   Serial.println("Starting wifi");
  
 
   wifi.setTransportToTCP();
 
-  wifi.endSendWithNewline(false); // Will end all transmissions with a newline and carrage return ie println.. default is true
+  wifi.endSendWithNewline(true); // Will end all transmissions with a newline and carrage return ie println.. default is true
 
   wifi.begin();
 
@@ -35,12 +47,9 @@ void setup() {
 }
 
 void loop() {
-
-  if (!wifi.isStarted())
-    wifi.begin();
-
-  
+ 
   //Send what you typed in the arduino console to the server
+  /*
   static char buf[20];
   if (stringComplete) {
     inputString.toCharArray(buf, sizeof buf);
@@ -48,18 +57,21 @@ void loop() {
     inputString = "";
     stringComplete = false;
   }
+  */
   
 
+  
+  sprintf(buf,"%d",counter);
+  wifi.send(SERVER,buf);
+  delay(200);
+  counter++;
   /*
-  wifi.send(SERVER,"Hola!\r\n");
-  delay(1000);
-  */
-
   WifiMessage in = wifi.listenForIncomingMessage(6000);
   if (in.hasData) {
     //Echo back;
     wifi.send(in.channel, in.message);
   }
+  */
 
 }
 

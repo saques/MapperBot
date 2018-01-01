@@ -30,10 +30,14 @@ char buffer[50];
  * fired.
  */
 void inc(){
+  Serial.print("inc; ");
+  Serial.println(compass.getPreviousReading());
   position.update(compass.getPreviousReading(), DELTA_CIRCUMFERENCE, 1);
 }
 
 void dec(){
+  Serial.print("dec; ");
+  Serial.println(compass.getPreviousReading());
   position.update(compass.getPreviousReading(), DELTA_CIRCUMFERENCE, -1);
 }
 
@@ -51,10 +55,10 @@ void setup() {
   //wifi startup
   swSerial.begin(9600);
   Serial.println("Starting wifi");
-  wifi.setTransportToTCP();
+  wifi.setTransportToUDP();
   wifi.endSendWithNewline(true); // Will end all transmissions with a newline and carrage return ie println.. default is true
   wifi.begin();
-  wifi.connectToAP("Retutatario", "123Liguai456");
+  wifi.connectToAP("Retutatario", "");
   wifi.connectToServer("192.168.1.110", "9999");
   wifi.send(SERVER, "ESP8266 test app started");
 
@@ -85,11 +89,9 @@ void loop() {
   Environment::getInstance().updateHeading(compass.heading(BUENOS_AIRES_DEC));
   //Environment::getInstance().updateDistance(ultrasonic.read());
   Environment::getInstance().updatePosition(&position);
-  //sprintf(buffer,"%s;%s",String(position.getX()).c_str(),String(position.getY()).c_str());
-  sprintf(buffer,"%d",(int)Position::toDegrees(Environment::getInstance().heading()));
-  //delay(200);
-  detachHSM5H();
+  sprintf(buffer,"%d;%d", (int)position.getX(), (int)position.getY());
+  delay(2000);
+  //detachHSM5H();
   wifi.send(SERVER, buffer);
-  attachHSM5H();
-  //Serial.println(Environment::getInstance().heading());
+  //attachHSM5H();
 }
