@@ -18,31 +18,28 @@ void dec(){
 
 String inputString;
 boolean stringComplete = false;
-SoftwareSerial swSerial(sw_serial_rx_pin, sw_serial_tx_pin);
-SerialESP8266wifi wifi(swSerial, swSerial, esp8266_reset_pin);
+//SoftwareSerial swSerial(sw_serial_rx_pin, sw_serial_tx_pin);
+SerialESP8266wifi wifi(Serial, Serial, esp8266_reset_pin);
 char buf[20];
 int counter=0;
 
 void setup() {
   inputString.reserve(20);
-  swSerial.begin(9600);
+  //swSerial.begin(9600);
   Serial.begin(9600);
 
-  initRotaryEncoder(PinA_ROT_ENC, PinB_ROT_ENC, inc, dec);
-  
-  Serial.println("Starting wifi");
- 
+  //initRotaryEncoder(PinA_ROT_ENC, PinB_ROT_ENC, inc, dec);
 
-  wifi.setTransportToTCP();
+
+  wifi.setTransportToUDP();
 
   wifi.endSendWithNewline(true); // Will end all transmissions with a newline and carrage return ie println.. default is true
 
   wifi.begin();
 
 
-  wifi.connectToAP("Retutatario", "");
+  wifi.connectToAP("Retutatario", "123Liguai456");
   wifi.connectToServer("192.168.1.110", "9999");
-  Serial.println("Connected");
   wifi.send(SERVER, "ESP8266 test app started");
 }
 
@@ -63,8 +60,9 @@ void loop() {
   
   sprintf(buf,"%d",counter);
   wifi.send(SERVER,buf);
-  delay(200);
+  delay(1000);
   counter++;
+  
   /*
   WifiMessage in = wifi.listenForIncomingMessage(6000);
   if (in.hasData) {
@@ -77,6 +75,7 @@ void loop() {
 
 
 //Listen for serial input from the console
+/*
 void serialEvent() {
   while (Serial.available()) {
     char inChar = (char)Serial.read();
@@ -86,6 +85,7 @@ void serialEvent() {
     }
   }
 }
+*/
 
 
 
