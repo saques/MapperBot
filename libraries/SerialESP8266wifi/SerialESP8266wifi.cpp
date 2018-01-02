@@ -551,7 +551,6 @@ WifiMessage SerialESP8266wifi::listenForIncomingMessage(int timeout){
         readBuffer(&buf[0], sizeof(buf) - 1, ':'); // read char count
         //readChar(); // removing ':' delim
         byte length = atoi(buf);
-		Serial.println(length);
         readBuffer(&msgIn[0], min(length, sizeof(msgIn) - 1));
         msg.hasData = true;
         msg.channel = channel;
@@ -589,7 +588,8 @@ WifiMessage SerialESP8266wifi::getIncomingMessage(void) {
         readBuffer(&buf[0], sizeof(buf) - 1, ':'); // read char count
         //readChar(); // removing ':' delim
         byte length = atoi(buf);
-        readBuffer(&msgIn[0], min(length, sizeof(msgIn) - 1));
+        //readBuffer(&msgIn[0], min(length, sizeof(msgIn) - 1));
+        readBuffer(&msgIn[0], sizeof(msgIn) - 1, '\n');
         msg.hasData = true;
         msg.channel = channel;
         msg.message = msgIn;
@@ -676,7 +676,6 @@ byte SerialESP8266wifi::readBuffer(char* buf, byte count, char delim) {
     char c;
     while (_serialIn->available() && pos < count) {
         c = readChar();
-		Serial.print(c);
         if (c == delim)
             break;
         buf[pos++] = c;
@@ -692,6 +691,6 @@ char SerialESP8266wifi::readChar() {
         _dbgSerial->print(c);
     else
         //sqrt(12345);
-		delayMicroseconds(50); // don't know why
+		    delayMicroseconds(50); // don't know why
     return c;
 }

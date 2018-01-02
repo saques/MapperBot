@@ -8,8 +8,8 @@
 
 #include <SoftwareSerial.h>
 #include <SerialESP8266wifi.h>
-#define sw_serial_rx_pin 12 //  Connect this pin to TX on the esp8266
-#define sw_serial_tx_pin 13 //  Connect this pin to RX on the esp8266
+#define sw_serial_rx_pin A0 //  Connect this pin to TX on the esp8266
+#define sw_serial_tx_pin A1 //  Connect this pin to RX on the esp8266
 #define esp8266_reset_pin 8 // Connect this pin to CH_PD on the esp8266, not reset. (let reset be unconnected)
 
 
@@ -21,7 +21,7 @@
 QMC5883L compass;
 Position position;
 SoftwareSerial swSerial(sw_serial_rx_pin, sw_serial_tx_pin);
-SerialESP8266wifi wifi(swSerial, swSerial, esp8266_reset_pin);//adding Serial enabled local echo and wifi debug
+SerialESP8266wifi wifi(Serial, Serial, esp8266_reset_pin, swSerial);//adding Serial enabled local echo and wifi debug
 char buffer[50];
 
 /*
@@ -30,20 +30,17 @@ char buffer[50];
  * fired.
  */
 void inc(){
-  Serial.print("inc; ");
-  Serial.println(compass.getPreviousReading());
   position.update(compass.getPreviousReading(), DELTA_CIRCUMFERENCE, 1);
 }
 
 void dec(){
-  Serial.print("dec; ");
-  Serial.println(compass.getPreviousReading());
   position.update(compass.getPreviousReading(), DELTA_CIRCUMFERENCE, -1);
 }
 
 
 void setup() {
   Serial.begin(9600);
+  swSerial.begin(9600);
 
   //compass startup
   Wire.begin();
@@ -53,8 +50,6 @@ void setup() {
   initRotaryEncoder(PinA_ROT_ENC, PinB_ROT_ENC, inc, dec);
 
   //wifi startup
-  swSerial.begin(9600);
-  Serial.println("Starting wifi");
   wifi.setTransportToUDP();
   wifi.endSendWithNewline(true); // Will end all transmissions with a newline and carrage return ie println.. default is true
   wifi.begin();
@@ -85,13 +80,24 @@ void setup() {
  * it would be reasonable to allow some time for the compass to update itself, for
  * instance, by diminishing the speed of the motors while rotating in the fixed position.
  */
+
+ /**
+  * EDIT:
+  * 
+  * With wifi using hwSerial now working, listening on swSerial no longer interrupts.
+  * However, a "hack" was needed in order to make reading incoming messages work.
+  * For some reason, "debugging" each char read (i.e., print it) seems to help. Otherwise,
+  * there are some byte losses due to some unknown reason. 
+  * 
+  * Therefore, the swSerial instantiated above is just a hack. And as we are not expecting to
+  * read anything from those pins, no interrupts are fired and the processor isn't slowed down 
+  * with such interrupts, allowing to the qmc5883l and rotary encoder to work perfectly.
+  */
 void loop() {
   Environment::getInstance().updateHeading(compass.heading(BUENOS_AIRES_DEC));
   //Environment::getInstance().updateDistance(ultrasonic.read());
   Environment::getInstance().updatePosition(&position);
-  sprintf(buffer,"%d;%d", (int)position.getX(), (int)position.getY());
-  delay(2000);
-  //detachHSM5H();
+  sprintf(buffer,"%s;%s", String(position.getX()).c_str(), String(position.getY()).c_str());
   wifi.send(SERVER, buffer);
-  //attachHSM5H();
+  delay(10);
 }

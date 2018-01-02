@@ -58,5 +58,5 @@ To sum up, this project will be using the following components:
 
 - SoftwareSerial will NOT work correctly with a high baud rate (for example, w/the default 115200 of the ESP8266). To change this, I removed the atmega328 from the Uno, connected the ESP8266 and used the AT command "AT+UART_DEF=9600,8,1,0,0".
 - There seems to be an issue when receiving data from other device. This is critical, as we want to be able to command the robot remotely. Sending works just fine. 
-	* As the author says in the code, for some reason some time should be allowed prior to reading the next byte from serialIn. Placing a Serial.print(c) in SerialESP8266wifi::readBuffer(char* buf, byte count, char delim) seems to be a good enough hack.
+	* As the author says in the code, for some reason some time should be allowed prior to reading the next byte from serialIn. Using SoftwareSerial as a debug stream seems to be a good enough hack. The main I/O stream is the standard hardware serial on the Arduino UNO.
 
