@@ -24,7 +24,7 @@ void setup() {
   wifi.begin();
 
 
-  wifi.connectToAP("Retutatario", "");
+  wifi.connectToAP("Retutatario", "123Liguai456");
   wifi.connectToServer("192.168.1.110", "9999");
   wifi.send(SERVER, "ESP8266 test app started");
 }

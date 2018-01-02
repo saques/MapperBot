@@ -588,8 +588,7 @@ WifiMessage SerialESP8266wifi::getIncomingMessage(void) {
         readBuffer(&buf[0], sizeof(buf) - 1, ':'); // read char count
         //readChar(); // removing ':' delim
         byte length = atoi(buf);
-        //readBuffer(&msgIn[0], min(length, sizeof(msgIn) - 1));
-        readBuffer(&msgIn[0], sizeof(msgIn) - 1, '\n');
+        readBuffer(&msgIn[0], min(length, sizeof(msgIn) - 1));
         msg.hasData = true;
         msg.channel = channel;
         msg.message = msgIn;
