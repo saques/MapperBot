@@ -45,10 +45,10 @@ Position position;
 HC_SR04 ultrasonic(Trig, Echo);
 Motor m1(PIN_A_1, PIN_B_1, MOTOR_SPEED);
 Motor m2(PIN_A_2, PIN_B_2, MOTOR_SPEED);
-State& state = Singleton<StraightLine>::getInstance();
+State* state = &Singleton<StraightLine>::getInstance();
 
 /*
- * Functrions for rotary encoder, 
+ * Functrions for rotary encoder,
  * to be triggered when interrupt
  * fired.
  */
@@ -67,7 +67,7 @@ void setup() {
   compass.init();
   initRotaryEncoder(PinA_ROT_ENC, PinB_ROT_ENC, inc, dec);
 
-  
+
   Environment::getInstance().setLeftMotor(&m1);
   Environment::getInstance().setRightMotor(&m2);
   //Environment::getInstance().setWifi(&wifi);
@@ -77,6 +77,5 @@ void loop() {
   Environment::getInstance().updateHeading(compass.heading(BUENOS_AIRES_DEC));
   Environment::getInstance().updateDistance(ultrasonic.read());
   Environment::getInstance().updatePosition(&position);
-  state = state.act();
+  state = &state->act();
 }
-

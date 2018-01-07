@@ -120,3 +120,20 @@ State& ControlRotationToTarget::act(){
     return *this;
   return Singleton<StraightLine>::getInstance();
 }
+
+/*
+* TEST STATES
+*/
+State& TurnOnLedState::act(){
+  Serial.println("on");
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(500);
+  return Singleton<TurnOffLedState>::getInstance();
+}
+
+State& TurnOffLedState::act(){
+  Serial.println("off");
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(500);
+  return Singleton<TurnOnLedState>::getInstance();
+}

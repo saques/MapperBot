@@ -73,4 +73,19 @@ class ControlRotationToTarget: public State {
     State& act();
 };
 
+
+/*
+* TEST STATES
+*/
+class TurnOnLedState: public State{
+  public:
+    State& act();
+};
+
+class TurnOffLedState: public State{
+  public:
+    State& act();
+};
+
+
 #endif
