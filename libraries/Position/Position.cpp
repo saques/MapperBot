@@ -1,4 +1,8 @@
 #include "Position.h"
+#include "Environment.h"
+#include "SerialESP8266wifi.h"
+
+char buffer[32];
 
 void Position::update(float heading, float delta, int dir){
 	x += cos(heading)*delta*dir;
@@ -31,7 +35,6 @@ float Position::getY(){
 }
 
 void Position::print(){
-	Serial.print(x);
-	Serial.print(";");
-	Serial.println(y);
+	sprintf(buffer, "O:%s;%s", String(x).c_str(), String(y).c_str());
+	Environment::getInstance().wifi()->send(SERVER, buffer);
 }

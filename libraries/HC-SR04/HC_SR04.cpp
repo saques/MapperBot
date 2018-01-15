@@ -16,5 +16,5 @@ float HC_SR04::read(){
 
   //340.29 m/s -> .00034029 m/ms -> .034029 cm/ms
   return pulseIn(Echo, HIGH)*.034029 / 2;
-  
+
 }
