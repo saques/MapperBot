@@ -34,8 +34,12 @@ class Environment: public Singleton<Environment>{
     void updatePosition(Position * p);
     Position * position();
 
+    void addCoveredDistance(float covered);
+    float coveredDistance();
+    void resetCoveredDistance();
+
   private:
-    float h,d;
+    float h,d,c;
     SerialESP8266wifi * w;
     Motor *l, *r;
     Position * p;

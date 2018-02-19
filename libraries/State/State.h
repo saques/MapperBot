@@ -1,6 +1,7 @@
 #ifndef STATE_H
 #define STATE_H
 #define DEFAULT_LIMIT 30
+#define DEFAULT_MAX_COVERED_LIMIT 300
 
 #if ARDUINO >= 100
   #include "Arduino.h"
@@ -34,14 +35,22 @@ enum Quadrant {N_E, N_W, S_E, S_W};
 class State {
   public:
     virtual State& act() = 0;
+    virtual bool addToCovered() {
+      return false;
+    }
 };
 
 class StraightLine: public State {
   public:
     State& act();
     void changeLimit(int newLimit);
+    void changeMaxCoveredLimit(int newLimit);
+    bool addToCovered(){
+      return true;
+    }
   private:
     int limit = DEFAULT_LIMIT;
+    int maxCoveredLimit = DEFAULT_MAX_COVERED_LIMIT;
 };
 
 class TriggerRotation: public State {
@@ -54,10 +63,14 @@ class ControlRotation: public State {
     State& act();
     float getTarget();
     void setInitial(float initial);
-    void clearTarget();
+    void reset();
     void shuffleQuadrants();
+    void changeLimit(int newLimit);
+    void setMaxCoveredTriggered();
   private:
     float target, initial, targetDistance;
+    int limit = DEFAULT_LIMIT;
+    bool maxCoveredTriggered = false;
     Quadrant quadrants[4] = {N_E, N_W, S_E, S_W};
     void verifyTarget();
     void checkBoundariesAndUpdate(float lower, float upper);

@@ -1,27 +1,27 @@
 #include "Environment.h"
 
 void Environment::setWiFi(SerialESP8266wifi * wifi){
-  this->w = wifi;
+  w = wifi;
 }
 
 void Environment::setLeftMotor(Motor * m){
-  this->l = m;
+  l = m;
 }
 
 void Environment::setRightMotor(Motor * m){
-  this->l = r;
+  r = r;
 }
 
 void Environment::updateHeading(float heading){
-  this->h = heading;
+  h = heading;
 }
 
 void Environment::updateDistance(float distance){
-  this->d = distance;
+  d = distance;
 }
 
 void Environment::updatePosition(Position * p){
-  this->p = p;
+  p = p;
 }
 
 Position * Environment::position(){
@@ -46,4 +46,16 @@ float Environment::heading(){
 
 float Environment::distance(){
   return d;
+}
+
+void Environment::addCoveredDistance(float covered){
+  c += covered;
+}
+
+float Environment::coveredDistance(){
+  return c;
+}
+
+void Environment::resetCoveredDistance(){
+  c = 0;
 }

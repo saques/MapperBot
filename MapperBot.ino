@@ -54,6 +54,8 @@ State* state = &Singleton<StraightLine>::getInstance();
  */
 void inc(){
   position.update(compass.getPreviousReading(), DELTA_CIRCUMFERENCE, 1);
+  if(state->addToCovered())
+    Environment::getInstance().addCoveredDistance(DELTA_CIRCUMFERENCE);
 }
 
 void dec(){

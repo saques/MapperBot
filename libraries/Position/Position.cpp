@@ -14,7 +14,10 @@ float Position::toDegrees(float rads){
 }
 
 bool Position::headingInRange(float h1, float h2, float EPSILON){
-  return abs(h1-h2) <= EPSILON ? true : false;
+	float diff = abs(h1-h2);
+	if(diff > M_PI)
+		diff = abs(2*M_PI-diff);
+  return diff <= EPSILON ? true : false;
 }
 
 Position* Position::applyDelta(Position& p, float delta, float heading){
