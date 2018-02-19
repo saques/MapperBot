@@ -12,6 +12,8 @@ State& StraightLine::act(){
     return Singleton<TriggerRotation>::getInstance();
   }
   if(env.coveredDistance() > maxCoveredLimit){
+    ControlRotation &cr = Singleton<ControlRotation>::getInstance();
+    cr.setMaxCoveredTriggered();
     env.resetCoveredDistance();
     return Singleton<TriggerRotation>::getInstance();
   }
