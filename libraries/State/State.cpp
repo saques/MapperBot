@@ -38,7 +38,6 @@ State& TriggerRotation::act(){
   Motor::Rotate(*env.LMotor(),*env.RMotor(), 1);
   ControlRotation &cr = Singleton<ControlRotation>::getInstance();
   cr.setInitial(env.heading());
-  cr.reset();
   cr.shuffleQuadrants();
   return Singleton<ControlRotation>::getInstance();
 }
@@ -168,6 +167,11 @@ State& ControlRotationToTarget::act(){
   float o = Singleton<ControlRotation>::getInstance().getTarget();
   if(!Position::headingInRange(env.heading(),o,EPSILON))
     return *this;
+
+  //If heading in the right direction, begin to
+  //go in a StraightLine
+  ControlRotation &cr = Singleton<ControlRotation>::getInstance();
+  cr.reset();
   return Singleton<StraightLine>::getInstance();
 }
 
