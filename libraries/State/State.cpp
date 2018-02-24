@@ -7,6 +7,7 @@
 //StraightLine
 State& StraightLine::act(){
   Environment& env = Environment::getInstance();
+  Motor::Forward(*env.LMotor(),*env.RMotor());
   if(env.distance() < limit){
     env.resetCoveredDistance();
     return Singleton<TriggerRotation>::getInstance();

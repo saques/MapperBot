@@ -11,9 +11,9 @@
 #include <Motor.h>
 #include <Environment.h>
 //wifi
-#define sw_serial_rx_pin A0 
-#define sw_serial_tx_pin A1 
-#define esp8266_reset_pin 8
+#define sw_serial_rx_pin A0
+#define sw_serial_tx_pin A1
+#define esp8266_reset_pin 13
 //Position
 #define DELTA_CIRCUMFERENCE 2.0f
 //Magnetometer
@@ -29,7 +29,7 @@
 #define PIN_B_l 9
 #define PIN_A_r 6
 #define PIN_B_r 5
-#define MOTOR_SPEED 30
+#define MOTOR_SPEED 60
 
 QMC5883L compass;
 Position position;
@@ -64,21 +64,25 @@ void setup() {
   initRotaryEncoder(PinA_ROT_ENC, PinB_ROT_ENC, inc, dec);
 
   //wifi startup
-  wifi.setTransportToUDP(); //Minimizing traffic saves battery (?)
+
+  wifi.setTransportToUDP();
   wifi.endSendWithNewline(true);
   wifi.begin();
-  wifi.connectToAP("", "");
-  wifi.connectToServer("192.168.1.110", "9999");
+  wifi.connectToAP("Retutatario", "");
+  wifi.connectToServer("192.168.1.101", "9999");
   wifi.send(SERVER, "MapperBot v1.0");
+
 
   Environment::getInstance().setLeftMotor(&l);
   Environment::getInstance().setRightMotor(&r);
+  Environment::getInstance().updatePosition(&position);
   Environment::getInstance().setWiFi(&wifi);
 }
 
 void loop() {
+  float distance = 0;
+  while((distance = ultrasonic.read())<0.01);
   Environment::getInstance().updateHeading(compass.heading(BUENOS_AIRES_DEC));
-  Environment::getInstance().updateDistance(ultrasonic.read());
-  Environment::getInstance().updatePosition(&position);
+  Environment::getInstance().updateDistance(distance);
   state = &state->act();
 }
