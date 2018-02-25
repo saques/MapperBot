@@ -5,11 +5,11 @@ void Environment::setWiFi(SerialESP8266wifi * wifi){
 }
 
 void Environment::setLeftMotor(Motor * m){
-  l = m;
+  this->l = m;
 }
 
 void Environment::setRightMotor(Motor * m){
-  r = r;
+  this->r = m;
 }
 
 void Environment::updateHeading(float heading){
@@ -21,7 +21,7 @@ void Environment::updateDistance(float distance){
 }
 
 void Environment::updatePosition(Position * p){
-  p = p;
+  this->p = p;
 }
 
 Position * Environment::position(){
