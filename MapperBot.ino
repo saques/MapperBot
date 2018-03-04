@@ -26,9 +26,9 @@
 #define PinB_ROT_ENC 3
 //Motors
 #define PIN_A_l 10
-#define PIN_B_l 9
+#define PIN_B_l 5
 #define PIN_A_r 6
-#define PIN_B_r 5
+#define PIN_B_r 9
 #define MOTOR_SPEED 60
 
 QMC5883L compass;
@@ -64,14 +64,14 @@ void setup() {
   initRotaryEncoder(PinA_ROT_ENC, PinB_ROT_ENC, inc, dec);
 
   //wifi startup
-
+  
   wifi.setTransportToUDP();
   wifi.endSendWithNewline(true);
   wifi.begin();
   wifi.connectToAP("Retutatario", "");
   wifi.connectToServer("192.168.1.101", "9999");
   wifi.send(SERVER, "MapperBot v1.0");
-
+  
 
   Environment::getInstance().setLeftMotor(&l);
   Environment::getInstance().setRightMotor(&r);
