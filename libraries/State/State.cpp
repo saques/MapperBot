@@ -1,8 +1,8 @@
 #include "State.h"
 #include <stdlib.h>
 
-#define EPSILON .0349f //2 degrees
-#define EPSILON_MULTIPLIER 5
+#define EPSILON .087266f //5 degrees
+#define EPSILON_MULTIPLIER 4
 
 //StraightLine
 State& StraightLine::act(){
@@ -36,10 +36,11 @@ void StraightLine::changeMaxCoveredLimit(int newLimit){
 State& TriggerRotation::act(){
   Environment& env = Environment::getInstance();
 
-  Motor::Rotate(*env.LMotor(),*env.RMotor(), 1);
   ControlRotation &cr = Singleton<ControlRotation>::getInstance();
   cr.setInitial(env.heading());
   cr.shuffleQuadrants();
+
+  Motor::Rotate(*env.LMotor(),*env.RMotor(), 1);
   return Singleton<ControlRotation>::getInstance();
 }
 
@@ -54,7 +55,7 @@ State& ControlRotation::act(){
   if(env.distance() < HC_SR04_MAX_RANGE){
     Position * objectPosition =
       Position::applyDelta(*env.position(), env.distance(), env.heading());
-    objectPosition->print();
+    //objectPosition->print();
     delete objectPosition;
   }
 

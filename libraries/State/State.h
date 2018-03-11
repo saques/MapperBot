@@ -38,6 +38,9 @@ class State {
     virtual bool addToCovered() {
       return false;
     }
+    virtual char * name(){
+      return "State";
+    }
 };
 
 class StraightLine: public State {
@@ -48,6 +51,9 @@ class StraightLine: public State {
     bool addToCovered(){
       return true;
     }
+    char * name(){
+      return "StraightLine";
+    }
   private:
     int limit = DEFAULT_LIMIT;
     int maxCoveredLimit = DEFAULT_MAX_COVERED_LIMIT;
@@ -56,6 +62,9 @@ class StraightLine: public State {
 class TriggerRotation: public State {
   public:
     State& act();
+    char * name(){
+      return "TriggerRotation";
+    }
 };
 
 class ControlRotation: public State {
@@ -67,6 +76,9 @@ class ControlRotation: public State {
     void shuffleQuadrants();
     void changeLimit(int newLimit);
     void setMaxCoveredTriggered();
+    char * name(){
+      return "ControlRotation";
+    }
   private:
     float target, initial, targetDistance;
     int limit = DEFAULT_LIMIT;
@@ -79,11 +91,17 @@ class ControlRotation: public State {
 class TriggerRotationToTarget: public State {
   public:
     State& act();
+    char * name(){
+      return "TriggerRotationToTarget";
+    }
 };
 
 class ControlRotationToTarget: public State {
   public:
     State& act();
+    char * name(){
+      return "ControlRotationToTarget";
+    }
 };
 
 
