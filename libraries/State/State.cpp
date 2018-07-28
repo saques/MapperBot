@@ -1,8 +1,9 @@
 #include "State.h"
 #include <stdlib.h>
 
-#define EPSILON .087266f //5 degrees
+#define EPSILON 0.261799f //5 degrees
 #define EPSILON_MULTIPLIER 4
+#define TIME_WINDOW 2000
 
 //StraightLine
 State& StraightLine::act(){
@@ -40,6 +41,9 @@ State& TriggerRotation::act(){
   cr.setInitial(env.heading());
   cr.shuffleQuadrants();
 
+  Serial.print("TriggerRotation, heading: ");
+  Serial.println(env.heading());
+
   Motor::Rotate(*env.LMotor(),*env.RMotor(), 1);
   return Singleton<ControlRotation>::getInstance();
 }
@@ -62,9 +66,18 @@ State& ControlRotation::act(){
   //Check if target needs to be updated
   verifyTarget();
 
+  Serial.print("Heading: ");
+  Serial.print(env.heading());
+  Serial.print("Target: ");
+  Serial.println(initial);
+
   //Exit if 360 degree sweep has been completed
-  if(!Position::headingInRange(env.heading(),initial,EPSILON))
+  bool headingInRange = Position::headingInRange(env.heading(),initial,EPSILON);
+
+  if(!headingInRange || (millis() - TIME_WINDOW) < t0)
     return *this;
+
+  Serial.println("Rotation Done");
 
   //Avoid going back in the same direction
   //This observes the case when the bot is in
@@ -75,6 +88,11 @@ State& ControlRotation::act(){
       target = initial;
     }
   }
+  //if no targets were found in the random quadrant
+  //go to the farthest location possible.
+  if(target == -1) {
+    target = maxTarget;
+  }
   return Singleton<TriggerRotationToTarget>::getInstance();
 }
 
@@ -83,17 +101,18 @@ float ControlRotation::getTarget(){
 }
 
 void ControlRotation::setInitial(float i){
+  t0 = millis();
   initial = i;
 }
 
 void ControlRotation::reset(){
-  target = targetDistance = -1;
+  target = targetDistance = maxTarget = maxDistance = -1;
   maxCoveredTriggered = false;
 }
 
 void ControlRotation::shuffleQuadrants(){
   for(int i=0; i<4; i++){
-    int r = rand()%4;
+    int r = random(4);
     Quadrant tmp = quadrants[i];
     quadrants[i] = quadrants[r];
     quadrants[r] = tmp;
@@ -111,8 +130,13 @@ void ControlRotation::checkBoundariesAndUpdate(float lower, float upper){
 void ControlRotation::verifyTarget(){
   Environment& env = Environment::getInstance();
 
+  if(maxTarget == -1 || maxDistance < env.distance()){
+    maxTarget = env.heading();
+    maxDistance = env.distance();
+  }
+
   //Return if too close to walls to get relevant info
-  if(env.distance() < limit)
+  if(env.distance() < 2*limit)
     return;
 
   switch (quadrants[0]) {

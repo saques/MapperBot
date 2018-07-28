@@ -29,7 +29,7 @@
 #define PIN_B_l 5
 #define PIN_A_r 6
 #define PIN_B_r 9
-#define MOTOR_SPEED 60
+#define MOTOR_SPEED 120
 
 QMC5883L compass;
 Position position;
@@ -56,22 +56,24 @@ void dec(){
 }
 
 void setup() {
-  srand(time(NULL));
   Serial.begin(9600);
   swSerial.begin(9600);
   Wire.begin();
+  randomSeed(analogRead(2));
   compass.init();
   initRotaryEncoder(PinA_ROT_ENC, PinB_ROT_ENC, inc, dec);
 
   //wifi startup
   
+  /*
   wifi.setTransportToUDP();
   wifi.endSendWithNewline(true);
   wifi.begin();
   wifi.connectToAP("Retutatario", "");
-  wifi.connectToServer("192.168.1.101", "9999");
+  wifi.connectToServer("255.255.255.255", "9999");
   wifi.send(SERVER, "MapperBot v1.0");
-  
+  */
+
 
   Environment::getInstance().setLeftMotor(&l);
   Environment::getInstance().setRightMotor(&r);

@@ -80,9 +80,10 @@ class ControlRotation: public State {
       return "ControlRotation";
     }
   private:
-    float target, initial, targetDistance;
+    float target, initial, targetDistance, maxTarget, maxDistance;
     int limit = DEFAULT_LIMIT;
     bool maxCoveredTriggered = false;
+    unsigned long t0;
     Quadrant quadrants[4] = {N_E, N_W, S_E, S_W};
     void verifyTarget();
     void checkBoundariesAndUpdate(float lower, float upper);
