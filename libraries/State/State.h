@@ -38,6 +38,9 @@ class State {
     virtual bool addToCovered() {
       return false;
     }
+    virtual bool rotationState(){
+      return false;
+    }
     virtual char * name(){
       return "State";
     }
@@ -76,6 +79,9 @@ class ControlRotation: public State {
     void shuffleQuadrants();
     void changeLimit(int newLimit);
     void setMaxCoveredTriggered();
+    bool rotationState(){
+      return true;
+    }
     char * name(){
       return "ControlRotation";
     }
@@ -100,6 +106,9 @@ class TriggerRotationToTarget: public State {
 class ControlRotationToTarget: public State {
   public:
     State& act();
+    bool rotationState(){
+      return true;
+    }
     char * name(){
       return "ControlRotationToTarget";
     }

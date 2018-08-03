@@ -18,6 +18,7 @@ class Position {
 		void update(float heading,float delta, int dir);
     void print();
 		static float toDegrees(float rads);
+    static float computeHeading(float currHeading, float delta);
     static Position* applyDelta(Position& p, float delta, float heading);
     static bool headingInRange(float h1, float h2, float EPSILON);
 	private:

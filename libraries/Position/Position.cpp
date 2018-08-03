@@ -13,6 +13,11 @@ float Position::toDegrees(float rads){
   return rads * 180/M_PI;
 }
 
+float Position::computeHeading(float currHeading, float delta){
+	float ans = currHeading + delta;
+	return ans > 2*M_PI ? ans - 2*M_PI : (ans < 0 ? ans + 2*M_PI : ans);
+}
+
 bool Position::headingInRange(float h1, float h2, float EPSILON){
 	float diff = abs(h1-h2);
 	if(diff > M_PI)
