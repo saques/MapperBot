@@ -1,9 +1,8 @@
 #include "State.h"
 #include <stdlib.h>
 
-#define EPSILON 0.261799f //5 degrees
-#define EPSILON_MULTIPLIER 4
-#define TIME_WINDOW 2000
+#define EPSILON 0.40f
+#define TIME_WINDOW 500
 
 //StraightLine
 State& StraightLine::act(){
@@ -41,9 +40,6 @@ State& TriggerRotation::act(){
   cr.setInitial(env.heading());
   cr.shuffleQuadrants();
 
-  Serial.print("TriggerRotation, heading: ");
-  Serial.println(env.heading());
-
   Motor::Rotate(*env.LMotor(),*env.RMotor(), 1);
   return Singleton<ControlRotation>::getInstance();
 }
@@ -59,17 +55,12 @@ State& ControlRotation::act(){
   if(env.distance() < HC_SR04_MAX_RANGE){
     Position * objectPosition =
       Position::applyDelta(*env.position(), env.distance(), env.heading());
-    //objectPosition->print();
+    objectPosition->print();
     delete objectPosition;
   }
 
   //Check if target needs to be updated
   verifyTarget();
-
-  Serial.print("Heading: ");
-  Serial.print(env.heading());
-  Serial.print("Target: ");
-  Serial.println(initial);
 
   //Exit if 360 degree sweep has been completed
   bool headingInRange = Position::headingInRange(env.heading(),initial,EPSILON);
@@ -77,14 +68,12 @@ State& ControlRotation::act(){
   if(!headingInRange || (millis() - TIME_WINDOW) < t0)
     return *this;
 
-  Serial.println("Rotation Done");
-
   //Avoid going back in the same direction
   //This observes the case when the bot is in
   //a sort of corridor
   if(maxCoveredTriggered){
     float backwards = initial < M_PI ? initial + M_PI : initial - M_PI;
-    if(Position::headingInRange(target, backwards, EPSILON*EPSILON_MULTIPLIER)){
+    if(Position::headingInRange(target, backwards, EPSILON)){
       target = initial;
     }
   }
@@ -136,7 +125,7 @@ void ControlRotation::verifyTarget(){
   }
 
   //Return if too close to walls to get relevant info
-  if(env.distance() < 2*limit)
+  if(env.distance() < limit)
     return;
 
   switch (quadrants[0]) {

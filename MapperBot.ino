@@ -14,8 +14,8 @@
 #define sw_serial_tx_pin A1
 #define esp8266_reset_pin 13
 //Position
-#define DELTA_CIRCUMFERENCE 2.0f
-#define AXIS_LENGTH 20.0f
+#define DELTA_CIRCUMFERENCE 2.04203522484f
+#define AXIS_LENGTH 18.5f
 //Ultrasonic Sensor
 #define Trig 7
 #define Echo 8
@@ -35,8 +35,8 @@ Motor l(PIN_A_l, PIN_B_l, MOTOR_SPEED);
 Motor r(PIN_A_r, PIN_B_r, MOTOR_SPEED);
 SoftwareSerial swSerial(sw_serial_rx_pin, sw_serial_tx_pin);
 SerialESP8266wifi wifi(Serial, Serial, esp8266_reset_pin, swSerial);//adding Serial enabled local echo and wifi debug
-State* state = &Singleton<StraightLine>::getInstance();
-float delta = atan(2*DELTA_CIRCUMFERENCE/AXIS_LENGTH);
+State* state = &Singleton<TriggerRotation>::getInstance();
+float delta = DELTA_CIRCUMFERENCE/AXIS_LENGTH;
 
 /*
  * Functrions for rotary encoder,
@@ -45,19 +45,23 @@ float delta = atan(2*DELTA_CIRCUMFERENCE/AXIS_LENGTH);
  */
 void inc(){
   Environment& env = Environment::getInstance();
+  if(state->rotationState()) {
+    env.updateHeading(Position::computeHeading(env.heading(), delta));
+    return;
+  }
   position.update(env.heading(), DELTA_CIRCUMFERENCE, 1);
   if(state->addToCovered())
     env.addCoveredDistance(DELTA_CIRCUMFERENCE);
-  if(state->rotationState())
-    env.updateHeading(Position::computeHeading(env.heading(), delta));
 
 }
 
 void dec(){
   Environment& env = Environment::getInstance();
-  position.update(env.heading(), DELTA_CIRCUMFERENCE, -1);
-  if(state->rotationState())
+  if(state->rotationState()) {
     env.updateHeading(Position::computeHeading(env.heading(), -1*delta));
+    return;
+  }
+  position.update(env.heading(), DELTA_CIRCUMFERENCE, -1);
 }
 
 void setup() {
@@ -68,18 +72,20 @@ void setup() {
 
   //wifi startup
 
-  /*
+  
   wifi.setTransportToUDP();
   wifi.endSendWithNewline(true);
   wifi.begin();
   wifi.connectToAP("Retutatario", "");
   wifi.connectToServer("255.255.255.255", "9999");
   wifi.send(SERVER, "MapperBot v1.0");
-  */
+  
 
   Environment::getInstance().setLeftMotor(&l);
   Environment::getInstance().setRightMotor(&r);
   Environment::getInstance().setWiFi(&wifi);
+  //To prevent overflow in (millis()-TIME_WINDOW)
+  delay(2000);
 }
 
 void loop() {

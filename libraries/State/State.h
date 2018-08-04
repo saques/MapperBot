@@ -1,7 +1,7 @@
 #ifndef STATE_H
 #define STATE_H
-#define DEFAULT_LIMIT 30
-#define DEFAULT_MAX_COVERED_LIMIT 150
+#define DEFAULT_LIMIT 35
+#define DEFAULT_MAX_COVERED_LIMIT 300
 
 #if ARDUINO >= 100
   #include "Arduino.h"
