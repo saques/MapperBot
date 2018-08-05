@@ -1,7 +1,7 @@
 #include "State.h"
 #include <stdlib.h>
 
-#define EPSILON 0.40f
+#define EPSILON 0.35f
 #define TIME_WINDOW 500
 
 //StraightLine
@@ -52,10 +52,10 @@ State& ControlRotation::act(){
   Environment& env = Environment::getInstance();
 
   //Send objectPosition if needed
-  if(env.distance() < HC_SR04_MAX_RANGE){
+  if(env.distance() < HC_SR04_MAX_RANGE/HC_SR04_SAFE_DIVIDER){
     Position * objectPosition =
       Position::applyDelta(*env.position(), env.distance(), env.heading());
-    objectPosition->print();
+    objectPosition->print("O");
     delete objectPosition;
   }
 

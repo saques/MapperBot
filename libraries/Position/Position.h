@@ -16,7 +16,7 @@ class Position {
 		float getX();
 		float getY();
 		void update(float heading,float delta, int dir);
-    void print();
+    void print(char * header);
 		static float toDegrees(float rads);
     static float computeHeading(float currHeading, float delta);
     static Position* applyDelta(Position& p, float delta, float heading);
