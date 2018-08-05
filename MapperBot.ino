@@ -49,7 +49,7 @@ void inc(){
     env.updateHeading(Position::computeHeading(env.heading(), delta));
     return;
   }
-  position.update(env.heading(), DELTA_CIRCUMFERENCE, 1);
+  env.position()->update(env.heading(), DELTA_CIRCUMFERENCE, 1);
   if(state->addToCovered())
     env.addCoveredDistance(DELTA_CIRCUMFERENCE);
 
@@ -61,7 +61,7 @@ void dec(){
     env.updateHeading(Position::computeHeading(env.heading(), -1*delta));
     return;
   }
-  position.update(env.heading(), DELTA_CIRCUMFERENCE, -1);
+  env.position()->update(env.heading(), DELTA_CIRCUMFERENCE, -1);
 }
 
 void setup() {
@@ -80,10 +80,13 @@ void setup() {
   wifi.connectToServer("255.255.255.255", "9999");
   wifi.send(SERVER, "MapperBot v1.0");
   
+  
+  
 
   Environment::getInstance().setLeftMotor(&l);
   Environment::getInstance().setRightMotor(&r);
   Environment::getInstance().setWiFi(&wifi);
+  Environment::getInstance().updatePosition(&position);
   //To prevent overflow in (millis()-TIME_WINDOW)
   delay(2000);
 }

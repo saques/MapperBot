@@ -42,7 +42,7 @@ float Position::getY(){
 	return y;
 }
 
-void Position::print(){
-	sprintf(buffer, "O:%s;%s", String(x).c_str(), String(y).c_str());
+void Position::print(char * header){
+	sprintf(buffer, "%s:%s;%s", header, String(x).c_str(), String(y).c_str());
 	Environment::getInstance().wifi()->send(SERVER, buffer);
 }
