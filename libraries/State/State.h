@@ -1,7 +1,7 @@
 #ifndef STATE_H
 #define STATE_H
-#define DEFAULT_LIMIT 30
-#define DEFAULT_MAX_COVERED_LIMIT 150
+#define DEFAULT_LIMIT 35
+#define DEFAULT_MAX_COVERED_LIMIT 300
 
 #if ARDUINO >= 100
   #include "Arduino.h"
@@ -36,6 +36,9 @@ class State {
   public:
     virtual State& act() = 0;
     virtual bool addToCovered() {
+      return false;
+    }
+    virtual bool rotationState(){
       return false;
     }
     virtual char * name(){
@@ -76,6 +79,9 @@ class ControlRotation: public State {
     void shuffleQuadrants();
     void changeLimit(int newLimit);
     void setMaxCoveredTriggered();
+    bool rotationState(){
+      return true;
+    }
     char * name(){
       return "ControlRotation";
     }
@@ -100,6 +106,9 @@ class TriggerRotationToTarget: public State {
 class ControlRotationToTarget: public State {
   public:
     State& act();
+    bool rotationState(){
+      return true;
+    }
     char * name(){
       return "ControlRotationToTarget";
     }
