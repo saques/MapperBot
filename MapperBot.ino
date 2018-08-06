@@ -27,7 +27,7 @@
 #define PIN_B_l 5
 #define PIN_A_r 6
 #define PIN_B_r 9
-#define MOTOR_SPEED 100
+#define MOTOR_SPEED 110
 
 Position position;
 HC_SR04 ultrasonic(Trig, Echo);

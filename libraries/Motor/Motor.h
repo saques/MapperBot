@@ -39,6 +39,10 @@ class Motor {
 
     void backward();
 
+    void pause();
+
+    void resume();
+
     /*
     ** This method receives a value in
     ** [-255,255].
@@ -47,7 +51,7 @@ class Motor {
     void set(int speed);
 
   private:
-    int pinA, pinB, speed;
+    int pinA, pinB, speed, status;
 
 };
 

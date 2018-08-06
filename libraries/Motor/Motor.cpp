@@ -38,19 +38,36 @@ Motor::Motor(int pinA, int pinB, int speed){
   this->pinA = pinA;
   this->pinB = pinB;
   this->speed = (sign(speed)*speed)%PWM_VALUES;
+  this->status = 0;
 }
 
 void Motor::stop(){
   digitalWrite(pinA, LOW);
   digitalWrite(pinB, LOW);
+  this->status = 0;
 }
 
 void Motor::forward(){
   set(speed);
+  this->status = 1;
 }
 
 void Motor::backward(){
   set(-1*speed);
+  this->status = -1;
+}
+
+void Motor::pause(){
+  digitalWrite(pinA, LOW);
+  digitalWrite(pinB, LOW);
+}
+
+void Motor::resume(){
+  if(this->status > 0){
+    forward();
+  } else if (this->status < 0){
+    backward();
+  }
 }
 
 void Motor::set(int s){
