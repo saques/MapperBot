@@ -30,6 +30,16 @@ void Motor::Backward(Motor &a, Motor &b){
   b.backward();
 }
 
+void Motor::Pause(Motor &a, Motor &b){
+  a.pause();
+  b.pause();
+}
+
+void Motor::Resume(Motor &a, Motor &b){
+  a.resume();
+  b.resume();
+}
+
 Motor::Motor(int pinA, int pinB, int speed){
   pinMode(pinA, OUTPUT);
   pinMode(pinB, OUTPUT);

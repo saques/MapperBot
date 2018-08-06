@@ -35,7 +35,7 @@ Motor l(PIN_A_l, PIN_B_l, MOTOR_SPEED);
 Motor r(PIN_A_r, PIN_B_r, MOTOR_SPEED);
 SoftwareSerial swSerial(sw_serial_rx_pin, sw_serial_tx_pin);
 SerialESP8266wifi wifi(Serial, Serial, esp8266_reset_pin, swSerial);//adding Serial enabled local echo and wifi debug
-State* state = &Singleton<TriggerRotation>::getInstance();
+State* state = &Singleton<StraightLine>::getInstance();
 float delta = DELTA_CIRCUMFERENCE/AXIS_LENGTH;
 
 /*

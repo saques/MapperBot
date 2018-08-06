@@ -26,6 +26,10 @@ class Motor {
 
     static void Backward(Motor &a, Motor &b);
 
+    static void Pause(Motor &a, Motor &b);
+
+    static void Resume(Motor &a, Motor &b);
+
     /*
     ** pinA and pinB are PWM pins.
     ** speed is a fixed value to be
