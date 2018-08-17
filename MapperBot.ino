@@ -72,16 +72,16 @@ void setup() {
 
   //wifi startup
 
-  
+
   wifi.setTransportToUDP();
   wifi.endSendWithNewline(true);
   wifi.begin();
   wifi.connectToAP("Retutatario", "");
   wifi.connectToServer("255.255.255.255", "9999");
   wifi.send(SERVER, "MapperBot v1.0");
-  
-  
-  
+
+
+
 
   Environment::getInstance().setLeftMotor(&l);
   Environment::getInstance().setRightMotor(&r);

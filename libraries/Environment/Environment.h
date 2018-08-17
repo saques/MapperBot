@@ -38,8 +38,12 @@ class Environment: public Singleton<Environment>{
     float coveredDistance();
     void resetCoveredDistance();
 
+    void addSweptDegrees(float delta);
+    float sweptDegrees();
+    void resetSweptDegrees();
+
   private:
-    float h,d,c=0;
+    float h,d,c=0,sd=0;
     SerialESP8266wifi * w;
     Motor *l, *r;
     Position * p;

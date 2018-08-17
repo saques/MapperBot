@@ -51,12 +51,17 @@ State& TriggerRotation::act(){
 State& ControlRotation::act(){
   Environment& env = Environment::getInstance();
 
-  //Send objectPosition if needed
-  if(env.distance() < HC_SR04_MAX_RANGE/HC_SR04_SAFE_DIVIDER){
+  //Send objectPosition if range is small enough
+  //and the object is in front of the initial heading
+  //of the robot
+  if(env.distance() < HC_SR04_MAX_RANGE/HC_SR04_SAFE_DIVIDER &&
+    Position::headingInRange(env.heading(), initial, M_PI / 2)){
+
     Position * objectPosition =
       Position::applyDelta(*env.position(), env.distance(), env.heading());
     objectPosition->print("O");
     delete objectPosition;
+
   }
 
   //Check if target needs to be updated

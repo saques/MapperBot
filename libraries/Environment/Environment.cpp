@@ -59,3 +59,15 @@ float Environment::coveredDistance(){
 void Environment::resetCoveredDistance(){
   c = 0;
 }
+
+void addSweptDegrees(float delta) {
+  sd += delta;
+}
+
+float sweptDegrees() {
+  return sd;
+}
+
+void resetSweptDegrees(){
+  sd = 0;
+}
