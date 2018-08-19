@@ -60,14 +60,14 @@ void Environment::resetCoveredDistance(){
   c = 0;
 }
 
-void addSweptDegrees(float delta) {
+void Environment::addSweptDegrees(float delta) {
   sd += delta;
 }
 
-float sweptDegrees() {
+float Environment::sweptDegrees() {
   return sd;
 }
 
-void resetSweptDegrees(){
+void Environment::resetSweptDegrees(){
   sd = 0;
 }

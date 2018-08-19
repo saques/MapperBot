@@ -27,7 +27,7 @@
 #define PIN_B_l 5
 #define PIN_A_r 6
 #define PIN_B_r 9
-#define MOTOR_SPEED 110
+#define MOTOR_SPEED 125
 
 Position position;
 HC_SR04 ultrasonic(Trig, Echo);
@@ -76,7 +76,7 @@ void setup() {
   wifi.setTransportToUDP();
   wifi.endSendWithNewline(true);
   wifi.begin();
-  wifi.connectToAP("Retutatario", "");
+  wifi.connectToAP("Retutatario", "123Liguai456");
   wifi.connectToServer("255.255.255.255", "9999");
   wifi.send(SERVER, "MapperBot v1.0");
 

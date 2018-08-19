@@ -55,7 +55,7 @@ State& ControlRotation::act(){
   //and the object is in front of the initial heading
   //of the robot
   if(env.distance() < HC_SR04_MAX_RANGE/HC_SR04_SAFE_DIVIDER &&
-    Position::headingInRange(env.heading(), initial, M_PI / 2)){
+    Position::headingInRange(env.heading(), initial, M_PI / 4)){
 
     Position * objectPosition =
       Position::applyDelta(*env.position(), env.distance(), env.heading());
